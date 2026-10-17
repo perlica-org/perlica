@@ -1,0 +1,3 @@
+{
+  "extends": "@perlica/config/tsconfig.base.json"
+}

@@ -1,0 +1,51 @@
+# Docker Compose for perlica
+# Full-stack container orchestration
+
+name: perlica
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: apps/server/Dockerfile
+    env_file:
+      - apps/server/.env
+    container_name: perlica-server
+    ports:
+      - "3001:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - DATABASE_URL=postgresql://postgres:password@db:5432/perlica
+    restart: unless-stopped
+    depends_on:
+      - db
+    networks:
+      - perlica-network
+
+  db:
+    image: postgres:16-alpine
+    container_name: perlica-postgres
+    environment:
+      POSTGRES_DB: perlica
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - perlica_postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - perlica-network
+
+networks:
+  perlica-network:
+    driver: bridge
+
+volumes:
+  perlica_postgres_data:

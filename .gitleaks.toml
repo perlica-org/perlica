@@ -1,0 +1,4 @@
+title = "perlica Gitleaks configuration"
+
+[extend]
+useDefault = true

@@ -1,0 +1,68 @@
+{
+  "name": "perlica",
+  "private": true,
+  "workspaces": {
+    "packages": [
+      "apps/*",
+      "packages/*"
+    ],
+    "catalog": {
+      "dotenv": "^17.4.2",
+      "zod": "^4.6.5",
+      "typescript": "^6.0.3",
+      "@types/bun": "^1.4.2",
+      "hono": "^4.12.27",
+      "better-auth": "1.6.22",
+      "vitest": "4.1.8",
+      "@vitest/ui": "4.1.8",
+      "@vitest/coverage-v8": "4.1.8",
+      "jsdom": "^29.1.1",
+      "alchemy": "^0.93.12"
+    }
+  },
+  "type": "module",
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "check-types": "turbo check-types",
+    "dev:web": "turbo -F web dev",
+    "dev:server": "turbo -F server dev",
+    "db:push": "turbo -F @perlica/db db:push",
+    "db:studio": "turbo -F @perlica/db db:studio",
+    "db:generate": "turbo -F @perlica/db db:generate",
+    "db:migrate": "turbo -F @perlica/db db:migrate",
+    "test": "bun run --filter web test && bun run --filter server test && bun run --filter @perlica/api test",
+    "knip": "knip",
+    "knip:production": "knip --production",
+    "secrets:scan": "gitleaks git --redact --verbose",
+    "secrets:scan:staged": "gitleaks git --pre-commit --redact --staged --verbose",
+    "check": "biome check --write .",
+    "prepare": "husky",
+    "ruler:apply": "bunx @intellectronica/ruler@latest apply --local-only"
+  },
+  "dependencies": {
+    "@perlica/env": "workspace:*",
+    "dotenv": "catalog:",
+    "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@cloudflare/workers-types": "^4.20260629.1",
+    "@perlica/config": "workspace:*",
+    "@types/bun": "catalog:",
+    "husky": "^9.1.7",
+    "knip": "^6.39.0",
+    "lint-staged": "^17.6.0",
+    "turbo": "2.10.11",
+    "typescript": "catalog:"
+  },
+  "overrides": {
+    "kysely": "0.28.17"
+  },
+  "lint-staged": {
+    "*.{js,ts,cjs,mjs,d.cts,d.mts,jsx,tsx,json,jsonc}": [
+      "biome check --write ."
+    ]
+  },
+  "packageManager": "bun@1.4.2"
+}
